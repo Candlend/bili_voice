@@ -1,0 +1,81 @@
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual envs
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Unit test / coverage
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.pytype/
+.ruff_cache/
+
+# Django/Flask stuff (generic)
+instance/
+db.sqlite3
+db.sqlite3-journal
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Project data / secrets
+app_data/credential.json
+
+# Node / Next.js (frontend)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/.vercel/
+frontend/.cache/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Package managers (keep lockfiles tracked)
+.pnpm-store/
+.npm/
+.yarn/
+
+# OS/thumbnail caches
+ehthumbs.db
+
+build/
+dist/

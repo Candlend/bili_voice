@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "user_dagw.proto";
+
+//
+message GoldRankBroadcast {
+    //
+    message GoldRankBroadcastItem {
+        //
+        int64 uid = 1;
+        //
+        string face = 2;
+        //
+        string score = 3;
+        //
+        string uname = 4;
+        //
+        int64 rank = 5;
+        //
+        int64 guard_level = 6;
+        //
+        bool is_mystery = 7;
+        //
+        UserInfo uinfo = 8;
+    }
+
+    //
+    string rank_type = 1;
+    //
+    repeated GoldRankBroadcast.GoldRankBroadcastItem list = 2;
+    //
+    repeated GoldRankBroadcast.GoldRankBroadcastItem online_list = 3;
+}
