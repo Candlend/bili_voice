@@ -55,6 +55,7 @@ export default function LoginPage() {
                 {status?.login?.avatar_url && (
                   <img
                     src={status.login.avatar_url}
+                    referrerPolicy="no-referrer"
                     alt="avatar"
                     style={{ width: 28, height: 28, borderRadius: 999, border: "1px solid var(--border)" }}
                   />
