@@ -23,14 +23,14 @@ def _pick(d: dict, candidates: List[str]):
     return None
 
 
-class _SafeDict(dict):
+class SafeDict(dict):
     def __missing__(self, key):
         return "{" + key + "}"
 
 
 def _fmt(tpl: str, ctx: dict) -> str:
     try:
-        return tpl.format_map(_SafeDict(**ctx))
+        return tpl.format_map(SafeDict(**ctx))
     except Exception:
         return tpl
 

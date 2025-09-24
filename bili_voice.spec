@@ -19,7 +19,7 @@ DISTPATH = os.path.join(SPECPATH, "dist")
 WORKPATH = os.path.join(SPECPATH, "build")
 
 # Executable name
-NAME = "bili-voice"
+NAME = "bili_voice"
 
 # Python module search paths (pathex)
 PYTHONPATH = [

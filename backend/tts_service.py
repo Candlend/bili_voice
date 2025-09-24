@@ -20,7 +20,7 @@ import shutil
 import re
 from .models import Settings, ReplacementRule
 
-logger = logging.getLogger("bili-voice.tts_service")
+logger = logging.getLogger("bili_voice.tts_service")
 _global_status_listener: Optional[Callable[[Optional[int], Optional[str], str], None]] = None
 
 
@@ -37,7 +37,7 @@ class TtsTask:
     room_id: Optional[int] = None
 
 
-class _PredictQueue:
+class PredictQueue:
     def __init__(self, max_size: Optional[int] = None, on_evict: Optional[Callable[[TtsTask], None]] = None):
         self._max_size = max_size
         self._high: Deque[TtsTask] = deque()
@@ -87,7 +87,7 @@ class _PredictQueue:
                 self._cv.wait()
 
 
-class _AudioQueue:
+class AudioQueue:
     def __init__(self, max_size: Optional[int] = None, on_evict: Optional[Callable[[TtsTask], None]] = None):
         self._max_size = max_size
         self._q: Deque[Tuple[AudioSegment, TtsTask]] = deque()
@@ -122,7 +122,7 @@ class _AudioQueue:
                     self._cv.wait()
 
 
-class _GradioClient:
+class GradioClient:
     """
     Minimal Gradio client to talk to GPT-SoVITS WebUI following the behavior
     referenced in gpt-sovits-tts/tts.py and tts_client.py.
@@ -138,7 +138,7 @@ class _GradioClient:
         if self._session is None:
             connector = aiohttp.TCPConnector(ssl=self.ssl_verify)
             self._session = aiohttp.ClientSession(timeout=self.timeout, connector=connector, headers={
-                "User-Agent": "bili-voice/tts_service"
+                "User-Agent": "bili_voice/tts_service"
             })
             await self._load_config()
 
@@ -219,8 +219,8 @@ class _GradioClient:
 class TTSService:
     def __init__(self) -> None:
         self._cfg: Optional[Settings] = None
-        self._predict_q = _PredictQueue(on_evict=lambda t: self._emit_status(getattr(t, "room_id", None), getattr(t, "key", None), "cancelled"))
-        self._audio_q = _AudioQueue(on_evict=lambda t: self._emit_status(getattr(t, "room_id", None), getattr(t, "key", None), "cancelled"))
+        self._predict_q = PredictQueue(on_evict=lambda t: self._emit_status(getattr(t, "room_id", None), getattr(t, "key", None), "cancelled"))
+        self._audio_q = AudioQueue(on_evict=lambda t: self._emit_status(getattr(t, "room_id", None), getattr(t, "key", None), "cancelled"))
         self._predict_thread = threading.Thread(target=self._predict_worker, daemon=True)
         self._play_thread = threading.Thread(target=self._play_worker, daemon=True)
         self._threads_started = False
@@ -321,7 +321,7 @@ class TTSService:
 
     def _predict_worker(self):
         logger.info("TTS predict worker started")
-        client: Optional[_GradioClient] = None
+        client: Optional[GradioClient] = None
         selected_sig: Optional[Tuple[str, str, str, str]] = None  # (base, sovits, gpt, text_lang)
 
         async def _ensure_and_select_models():
@@ -334,8 +334,8 @@ class TTSService:
                 logger.warning("Gradio server URL not set; waiting...")
                 return False
             # (re)create client when base changes
-            if client is None or (isinstance(client, _GradioClient) and client.base_url.rstrip("/") != (base if base.endswith("/") else (base + "/")).rstrip("/")):
-                client = _GradioClient(base, ssl_verify=False)
+            if client is None or (isinstance(client, GradioClient) and client.base_url.rstrip("/") != (base if base.endswith("/") else (base + "/")).rstrip("/")):
+                client = GradioClient(base, ssl_verify=False)
                 selected_sig = None
             try:
                 # Select weights only when signature changed
@@ -553,7 +553,7 @@ def priority_from_event_type(event_type: str) -> Priority:
 # without performing any server-side playback. They cache model selection
 # and only re-select when relevant settings change.
 
-_http_client: Optional[_GradioClient] = None
+_http_client: Optional[GradioClient] = None
 _selected_sig: Optional[Tuple[str, str, str, str]] = None  # (base_url, sovits_model, gpt_model, text_lang)
 
 async def _ensure_client_and_models(settings: Settings) -> bool:
@@ -568,7 +568,7 @@ async def _ensure_client_and_models(settings: Settings) -> bool:
                 await _http_client.close()
         except Exception:
             pass
-        _http_client = _GradioClient(base, ssl_verify=False)
+        _http_client = GradioClient(base, ssl_verify=False)
         _selected_sig = None
     assert _http_client is not None
     await _http_client.ensure()

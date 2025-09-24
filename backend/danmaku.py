@@ -17,7 +17,7 @@ from .storage import load_settings, load_credential
 from .events import create_event
 from . import tts_service
 
-logger = logging.getLogger("bili-voice.danmaku")
+logger = logging.getLogger("bili_voice.danmaku")
 
 def build_bili_credential() -> Optional[BiliCredential]:
     cred_dto = load_credential()
