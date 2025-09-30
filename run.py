@@ -85,8 +85,8 @@ def main() -> None:
         window = webview.create_window(
             title="BiliVoice",
             url=url,
-            width=1936,
-            height=1119,
+            width=1024,
+            height=768,
             resizable=True,
         )
         # When the window closes, proactively cleanup external child processes
