@@ -188,6 +188,15 @@ export default function SettingsPage() {
             </span>
           </div>
 
+          <div className="row">
+            <label>启动时自动尝试启动 WebUI</label>
+            <Toggle
+              label=""
+              checked={!!(settings as any).autostart_sovits}
+              onChange={(v) => setSettings({ ...settings, autostart_sovits: v as any })}
+            />
+          </div>
+
           <div className="row" style={{ alignItems: "center", gap: 8 }}>
             <label>GPT-SoVITS 根目录</label>
             <input
@@ -196,15 +205,6 @@ export default function SettingsPage() {
               onChange={(e) => setSettings({ ...settings, sovits_root_path: e.target.value })}
               placeholder="例如 D:\\GPT-SoVITS"
               style={{ flex: 1, minWidth: 320 }}
-            />
-          </div>
-
-          <div className="row">
-            <label>启动时自动尝试启动 WebUI</label>
-            <Toggle
-              label=""
-              checked={!!(settings as any).autostart_sovits}
-              onChange={(v) => setSettings({ ...settings, autostart_sovits: v as any })}
             />
           </div>
 
@@ -230,31 +230,6 @@ export default function SettingsPage() {
             />
           </div>
 
-          <div className="row">
-            <label>采样步数</label>
-            <input
-              className="input"
-              value={settings.sample_steps}
-              onChange={(e) => setSettings({ ...settings, sample_steps: e.target.value })}
-              placeholder="32"
-              style={{ flex: 1, minWidth: 160 }}
-            />
-          </div>
-
-          <div className="row">
-            <label>文本语言</label>
-            <select
-              className="input"
-              value={settings.text_lang}
-              onChange={(e) => setSettings({ ...settings, text_lang: e.target.value })}
-              style={{ flex: 1, minWidth: 240 }}
-            >
-              {["中文","英文","日文","粤语","韩文","中英混合","日英混合","粤英混合","韩英混合","多语种混合","多语种混合(粤语)"].map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
-          </div>
-
           <div className="row" style={{ alignItems: "center", gap: 8 }}>
             <label>参考音频路径</label>
             <input
@@ -277,6 +252,45 @@ export default function SettingsPage() {
             />
           </div>
 
+          <div className="row">
+            <label>文本语言</label>
+            <select
+              className="input"
+              value={settings.text_lang}
+              onChange={(e) => setSettings({ ...settings, text_lang: e.target.value })}
+              style={{ flex: 1, minWidth: 240 }}
+            >
+              {["中文","英文","日文","粤语","韩文","中英混合","日英混合","粤英混合","韩英混合","多语种混合","多语种混合(粤语)"].map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="row">
+            <label>文本切分方式</label>
+            <select
+              className="input"
+              value={settings.text_split_method}
+              onChange={(e) => setSettings({ ...settings, text_split_method: e.target.value })}
+              style={{ flex: 1, minWidth: 240 }}
+            >
+              {["不切","凑四句一切","凑50字一切","按中文句号。切","按英文句号.切","按标点符号切"].map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="row">
+            <label>采样步数</label>
+            <input
+              className="input"
+              value={settings.sample_steps}
+              onChange={(e) => setSettings({ ...settings, sample_steps: e.target.value })}
+              placeholder="32"
+              style={{ flex: 1, minWidth: 160 }}
+            />
+          </div>
+          
           <div className="row">
             <label>Top K</label>
             <input
@@ -314,20 +328,6 @@ export default function SettingsPage() {
               value={settings.temperature}
               onChange={(e) => setSettings({ ...settings, temperature: Math.max(0, Math.min(1, Number(e.target.value))) })}
             />
-          </div>
-
-          <div className="row">
-            <label>文本切分方式</label>
-            <select
-              className="input"
-              value={settings.text_split_method}
-              onChange={(e) => setSettings({ ...settings, text_split_method: e.target.value })}
-              style={{ flex: 1, minWidth: 240 }}
-            >
-              {["不切","凑四句一切","凑50字一切","按中文句号。切","按英文句号.切","按标点符号切"].map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
           </div>
 
           <div className="row">

@@ -39,7 +39,7 @@ class Settings(BaseModel):
     template_like_click: str = Field("感谢 {uname} 的点赞", description="点赞格式")
 
     # AI 语音设置
-    tts_enabled: bool = Field(False, description="启用AI语音播报")
+    tts_enabled: bool = Field(True, description="启用AI语音播报")
     tts_volume: float = Field(0.0, description="音量增益 (dB，建议范围 -30 到 +12)")
     tts_rate: float = Field(1.0, description="语速(0.5-2)")
     tts_pitch: float = Field(1.0, description="音调(0-2)")

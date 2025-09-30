@@ -219,14 +219,3 @@ coll = COLLECT(
     upx_exclude=[],
     name=NAME,
 )
-
-# Optional: create a .zip of the distribution folder like the reference
-try:
-    print("Start to package zip")
-    subprocess.run(
-        [sys.executable, "-m", "zipfile", "-c", NAME + ".zip", NAME],
-        cwd=DISTPATH,
-        check=False,
-    )
-except Exception:
-    pass

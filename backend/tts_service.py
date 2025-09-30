@@ -341,8 +341,10 @@ class TTSService:
                 # Select weights only when signature changed
                 sig = (base, str(cfg.sovits_model), str(cfg.gpt_model), str(cfg.text_lang))
                 if selected_sig != sig:
-                    await client.predict("/change_sovits_weights", cfg.sovits_model, cfg.text_lang, cfg.text_lang)
-                    await client.predict("/change_gpt_weights", cfg.gpt_model)
+                    result = await client.predict("/change_sovits_weights", cfg.sovits_model, cfg.text_lang, cfg.text_lang)
+                    logger.info("Changed SoVITS weights: %s", result)
+                    result = await client.predict("/change_gpt_weights", cfg.gpt_model)
+                    logger.info("Changed GPT weights: %s", result)
                     selected_sig = sig
                     self._gradio_ready.set()
                 return True
@@ -555,34 +557,6 @@ def priority_from_event_type(event_type: str) -> Priority:
 
 _http_client: Optional[GradioClient] = None
 _selected_sig: Optional[Tuple[str, str, str, str]] = None  # (base_url, sovits_model, gpt_model, text_lang)
-
-async def _ensure_client_and_models(settings: Settings) -> bool:
-    global _http_client, _selected_sig
-    base = (settings.gradio_server_url or "").strip()
-    if not base:
-        return False
-    if _http_client is None or (_http_client is not None and _http_client.base_url.rstrip("/") != base.rstrip("/") + ""):
-        # reset client and selection when base changes
-        try:
-            if _http_client is not None:
-                await _http_client.close()
-        except Exception:
-            pass
-        _http_client = GradioClient(base, ssl_verify=False)
-        _selected_sig = None
-    assert _http_client is not None
-    await _http_client.ensure()
-    sig = (base, str(settings.sovits_model), str(settings.gpt_model), str(settings.text_lang))
-    # Select weights only if signature changed
-    if _selected_sig != sig:
-        try:
-            await _http_client.predict("/change_sovits_weights", settings.sovits_model, settings.text_lang, settings.text_lang)
-            await _http_client.predict("/change_gpt_weights", settings.gpt_model)
-            _selected_sig = sig
-        except Exception as e:
-            logger.warning("Failed to select models on Gradio server: %s", e)
-            return False
-    return True
 
 
 async def gradio_health(settings: Settings) -> Dict[str, Any]:

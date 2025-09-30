@@ -102,7 +102,7 @@ async def _startup():
             if not ok:
                 root = (s.sovits_root_path or "").strip()
                 if root:
-                    root_path = Path(root)
+                    root_path = Path(root).resolve()
                     py = root_path / "runtime" / "python.exe"
                     script = root_path / "GPT_SoVITS" / "inference_webui_fast.py"
                     if py.exists() and script.exists():
